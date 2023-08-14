@@ -51,11 +51,13 @@
                         <p class="texto-item">Item Importante</p>
                 </div>
                 -->
-                <div class="item" v-for="item in lista">
+                <!--<div class="item" v-for="item in lista"> -->
                     <!--<p class="texto-item"> {{ item.texto }} </p> -->
-                    <p class="texto-item" v-text="item.texto">
+                    <div class="item" v-bind:class="{importante: item.importante}" v-for="item in lista">
+                        <p class="texto-item" v-text="item.texto">
+                    </div>
+                <!--</div> -->
                 </div>
-            </div>
         </div>
     </div>
     <script src="https://unpkg.com/vue@3.0.0-rc.5/dist/vue.global.js"></script>
