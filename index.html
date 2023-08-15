@@ -17,17 +17,23 @@
             <h1>TODO.LIST</h1>
 
             <div id="form-wrapper">
+
                 <div id="o-form">
-                    <input type="text" id="text-novo-item">
+                    <!-- respondendo ao teclado -->
+                    <input type="text" id="text-novo-item" v-model="textoNovoItem" @keyup.enter="salvarNovoItem"
+                           maxlength="20">
                     <div>
-                        <input type="checkbox" id="is-importante">
+                        <input type="checkbox" id="is-importante" v-model="novoItemImportante">
                         <label for="is-importante"> Importante</label><br>
                     </div>
-                    <button>
+                    <button @click="salvarNovoItem" v-if="textoNovoItem.length > 0">
                         Salvar
                     </button>
                 </div>
-                <p id="contagem"></p>
+                <!-- exibe a quantidade de caracteres digitados em textoNovoItem -->
+                <!-- <p id="contagem">{{ textoNovoItem.length }}/20</p>-->
+                <p id="contagem">{{ qtdeDigitada }}/20</p>
+
             </div>
 
             <div id="list-wrapper">
@@ -53,37 +59,72 @@
                 -->
                 <!--<div class="item" v-for="item in lista"> -->
                     <!--<p class="texto-item"> {{ item.texto }} </p> -->
-                    <div class="item" v-bind:class="{importante: item.importante}" v-for="item in lista">
+                    <div class="item" v-bind:class="{importante: item.importante, feito: item.feito}" 
+                         v-for="item in lista" v-on:click="item.feito = !item.feito">
                         <p class="texto-item" v-text="item.texto">
                     </div>
                 <!--</div> -->
                 </div>
         </div>
     </div>
+
     <script src="https://unpkg.com/vue@3.0.0-rc.5/dist/vue.global.js"></script>
     <script>
         Vue.createApp({
+            // retorna métodos
+            methods: {
+                // método
+                salvarNovoItem() {
+                    if (this.textoNovoItem.length > 0) {
+                        let novoItem = {
+                            id: new Date().getTime(),             // criando um ID
+                            texto: this.textoNovoItem,            // atribuindo valores
+                            importante: this.novoItemImportante,
+                            feito: false,
+                        };
+                        // limpando os campos
+                        this.lista.push(novoItem);
+                        this.textoNovoItem = "";
+                        this.novoItemImportante = false;
+                    }
+                },
+            },
+            // retorna atributos
             data() {
                 return {
+                    textoNovoItem: "",
+                    novoItemImportante: false,
+                    // itens da lista inicial
+                    //lista: [
+                    //    {
+                    //        texto: "Item importante",
+                    //        importante: true,
+                    //        feito: false,
+                    //    },
+                    //    {
+                    //        texto: "Item feito",
+                    //        importante: false,
+                    //        feito: true,
+                    //    },
+                    //    {
+                    //        texto: "Item a fazer",
+                    //        importante: false,
+                    //        feito: false,
+                    //    },
+                    //],
+                    // lista final (em branco)
                     lista: [
-                        {
-                            texto: "Item importante",
-                            importante: true,
-                            feito: false,
-                        },
-                        {
-                            texto: "Item feito",
-                            importante: false,
-                            feito: true,
-                        },
-                        {
-                            texto: "Item a fazer",
-                            importante: false,
-                            feito: false,
-                        },
                     ],
                 };
             },
+            // retorna funções
+            // reatividade
+            computed: {
+                // retorna a quantidade de caracteres digitados em textoNovoItem
+                qtdeDigitada() {
+                    return this.textoNovoItem.length;
+                }
+            }
         }).mount("#app")
     </script>
 
